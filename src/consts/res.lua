@@ -5,9 +5,8 @@ local res = {
     CLICK_SOUND = "res/audio/click.wav",
     MAIN_FONT = "res/fonts/Valorant.ttf",
     CONFIG_PATH = "ballout.conf",
-    PLAYER_SPR = "res/img/player.png",
     BULLET_SPR = "res/img/bullet.png",
-    ENEMY_SPR = "res/img/enemy.png",
+    TILEMAP = "res/img/tilemap.png",
 }
 
 return res

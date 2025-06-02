@@ -1,10 +1,10 @@
+local tileManager = require("src.managers.tile_manager")
 local vector = require("lib.vector")
 local res = require("src.consts.res")
 
 local enemy = {}
 local pool = {}
 local poolSize = 50
-local sprite = love.graphics.newImage(res.ENEMY_SPR)
 
 local function getRandomPos()
     local x, y
@@ -37,14 +37,15 @@ local function spawn()
         kind = randKind == 1 and "chaser" or "wanderer",
         maxHp = 100,
         hp = 100,
-        speed = 50,
         pos = getRandomPos(),
         dir = vector(0, 0),
-        sprite = sprite,
-        width = sprite:getWidth(),
-        height = sprite:getHeight(),
+        width = 32, -- Base 8px, x4 upscaled
+        height = 32,
         removable = false,
     }
+
+    e.speed = randKind == 1 and 50 or 100
+    e.sprite = randKind == 1 and tileManager.chaser or tileManager.wanderer
 
     setmetatable(e, { __index = enemy })
     return e
@@ -65,8 +66,8 @@ end
 function enemy:update(dt, others)
     -- Separation vector
     local sep = vector(0, 0)
-    local sepRadius = 30
-    local repulseStr = 300
+    local sepRadius = 32
+    local repulseStr = 100
 
     for _, e in ipairs(others) do
         if e ~= self then
@@ -74,8 +75,11 @@ function enemy:update(dt, others)
             local dist = offset:len()
 
             if dist < sepRadius and dist > 0 then
-                -- Push away from close enemies
-                sep = sep + offset:normalized() * (1 - dist / repulseStr)
+                local force = (1 - dist / repulseStr)
+                if force > 0.01 then
+                    -- Prevent jittering movements
+                    sep = sep + offset:normalized() * force
+                end
             end
         end
     end
@@ -91,7 +95,9 @@ function enemy:update(dt, others)
 end
 
 function enemy:draw()
-    love.graphics.draw(self.sprite, self.pos.x, self.pos.y)
+    local x = math.floor(self.pos.x)
+    local y = math.floor(self.pos.y)
+    love.graphics.draw(tileManager.tilemap, self.sprite, x, y, 0, 4, 4)
 end
 
 return enemy

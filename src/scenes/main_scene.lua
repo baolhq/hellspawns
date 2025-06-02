@@ -1,4 +1,5 @@
 local inputManager = require("src.managers.input_manager")
+local tileManager  = require("src.managers.tile_manager")
 local vector       = require("lib.vector")
 local colors       = require("src.consts.colors")
 local res          = require("src.consts.res")
@@ -18,19 +19,19 @@ function mainScene:load(assets, actions, configs)
     self.enemyMax = 10
     self.enemyTimer = 0
     self.enemyThreshold = 2
+    tileManager:init()
 
     -- Initialize the player
-    local pS = love.graphics.newImage(res.PLAYER_SPR)
-    local pX = (love.graphics.getWidth() - pS:getWidth()) / 2
-    local pY = (love.graphics.getHeight() - pS:getHeight()) / 2
-    player:init(vector(pX, pY), pS)
+    player:init()
 end
 
 function mainScene:mousepressed(x, y, btn)
     if btn == 1 then
         local b = bullet.get()
+        local bx = player.pos.x + player.width / 2
+        local by = player.pos.y + player.height / 2
 
-        b.pos = player.pos
+        b.pos = vector(bx, by)
         -- Set bullet direction to the cursor
         local dir = vector(x, y) - b.pos
         b.dir = dir:normalized()
@@ -76,10 +77,17 @@ function mainScene:update(dt)
     -- Move and destroy dead enemies
     for i = #self.enemies, 1, -1 do
         local e = self.enemies[i]
-        local dir = vector(player.pos.x, player.pos.y) - e.pos
-        e.dir = dir:normalized()
-        e:update(dt, self.enemies)
+        local target = vector(player.pos.x, player.pos.y)
 
+        if e.kind == "chaser" or love.math.random(100) <= 50 then
+            -- Chaser: Follow player till its end
+            e.dir = (target - e.pos)
+        else
+            -- Wanderer: Randomized movements
+            e.dir = vector(love.math.random(-1, 1), love.math.random(-1, 1))
+        end
+
+        e:update(dt, self.enemies)
         if e.removable then table.remove(self.enemies, i) end
     end
 end

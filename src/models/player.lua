@@ -1,17 +1,20 @@
+local tileManager = require("src.managers.tile_manager")
 local vector = require("lib.vector")
-local bullet = require("src.models.bullet")
 
 local player = {}
 
-function player:init(pos, sprite)
+function player:init()
     self.maxHp = 100
     self.hp = self.maxHp
     self.speed = 400
-    self.pos = pos
     self.velocity = vector(0, 0)
-    self.sprite = sprite
-    self.width = sprite:getWidth()
-    self.height = sprite:getHeight()
+    self.sprite = tileManager.player
+    self.width = 32 -- Base 8px, x4 upscaled
+    self.height = 32
+
+    local x = (love.graphics.getWidth() - 32) / 2
+    local y = (love.graphics.getHeight() - 32) / 2
+    self.pos = vector(x, y)
 end
 
 function player:move(dir, dt)
@@ -25,17 +28,14 @@ function player:move(dir, dt)
     self.pos.y = self.pos.y + dir.y * self.speed * dt
 end
 
-function player:shoot(dir, sprite)
-    local b = bullet.spawn(self.pos, dir, sprite)
-    table.insert(self.bullets, b)
-end
-
 function player:update(dt)
 
 end
 
 function player:draw()
-    love.graphics.draw(self.sprite, self.pos.x, self.pos.y)
+    local x = math.floor(self.pos.x)
+    local y = math.floor(self.pos.y)
+    love.graphics.draw(tileManager.tilemap, self.sprite, x, y, 0, 4, 4)
 end
 
 return player
