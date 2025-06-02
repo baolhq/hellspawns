@@ -32,6 +32,12 @@ function sceneManager:switch(name, assets, configs)
     end
 end
 
+function sceneManager:mousemoved(x, y, dx, dy, isTouch)
+    if scenes[self.current].mousemoved then
+        scenes[self.current]:mousemoved(x, y, dx, dy, isTouch)
+    end
+end
+
 function sceneManager:mousepressed(x, y, btn)
     if scenes[self.current].mousepressed then
         scenes[self.current]:mousepressed(x, y, btn)

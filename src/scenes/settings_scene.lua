@@ -1,11 +1,7 @@
 local inputManager  = require("src.managers.input_manager")
 local colors        = require("src.consts.colors")
 
-local settingsScene = {
-    assets = {},
-    actions = {},
-    configs = {},
-}
+local settingsScene = {}
 
 function settingsScene:load(assets, actions, configs)
     self.assets = assets

@@ -1,16 +1,7 @@
 local vector = require("lib.vector")
 local bullet = require("src.models.bullet")
 
-local player = {
-    hp = 0,
-    maxHp = 0,
-    speed = 0,
-    pos = {},
-    sprite = {},
-    bullets = {},
-    width = 0,
-    height = 0,
-}
+local player = {}
 
 function player:init(pos, sprite)
     self.maxHp = 100

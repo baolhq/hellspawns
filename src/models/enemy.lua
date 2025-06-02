@@ -1,32 +1,18 @@
 local vector = require("lib.vector")
 local res = require("src.consts.res")
 
-local enemy = {
-    kind = "chaser", -- "chaser", "wanderer"
-    hp = 0,
-    maxHp = 0,
-    speed = 0,
-    pos = {},
-    dir = {},
-    sprite = {},
-    width = 0,
-    height = 0,
-    removable = false,
-}
-
+local enemy = {}
 local pool = {}
 local poolSize = 50
 local sprite = love.graphics.newImage(res.ENEMY_SPR)
 
-local function spawn()
-    local randKind = love.math.random(2)
+local function getRandomPos()
+    local x, y
     local screenW = love.graphics.getWidth()
     local screenH = love.graphics.getHeight()
     local margin = 100
-
     -- Pick one random edge: 1=left, 2=right, 3=top, 4=bottom
     local edge = love.math.random(4)
-    local x, y
 
     -- Set initial position to random off-screen
     if edge == 1 then
@@ -42,23 +28,30 @@ local function spawn()
         x = love.math.random(0, screenW)
         y = margin + screenH
     end
+    return vector(x, y)
+end
 
+local function spawn()
+    local randKind = love.math.random(2)
     local e = {
         kind = randKind == 1 and "chaser" or "wanderer",
         maxHp = 100,
         hp = 100,
         speed = 50,
-        pos = vector(x, y),
+        pos = getRandomPos(),
         dir = vector(0, 0),
         sprite = sprite,
         width = sprite:getWidth(),
         height = sprite:getHeight(),
+        removable = false,
     }
+
     setmetatable(e, { __index = enemy })
     return e
 end
 
 local function createPool()
+    print("New pool requested")
     for i = 1, poolSize do
         table.insert(pool, spawn())
     end

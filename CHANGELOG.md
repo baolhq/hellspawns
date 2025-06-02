@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.0.4
+
+Refactoring models for simplicity, keyboard and mouse UI navigations
+
+- Clean up clutter codes in model table
+- Separate mouse with keyboard navigation for smoother UX
+- Minor bug fixes
+
 ## 0.0.3
 
 Some minor refactoring, add global input manager for sanity

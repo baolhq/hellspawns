@@ -50,6 +50,10 @@ function love.keyreleased(key)
     inputManager:keyreleased(key)
 end
 
+function love:mousemoved(x, y, dx, dy, isTouch)
+    sceneManager:mousemoved(x, y, dx, dy, isTouch)
+end
+
 function love.mousepressed(x, y, btn)
     sceneManager:mousepressed(x, y, btn)
 end

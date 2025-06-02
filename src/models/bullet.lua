@@ -2,17 +2,7 @@ local vector   = require("lib.vector")
 local res      = require("src.consts.res")
 local collider = require("src.utils.collider")
 
-local bullet   = {
-    dmg = 0,
-    speed = 0,
-    pos = {},
-    dir = {},
-    sprite = {},
-    width = 0,
-    height = 0,
-    removable = false,
-}
-
+local bullet   = {}
 local pool     = {}
 local poolSize = 20
 local sprite   = love.graphics.newImage(res.BULLET_SPR)
@@ -26,6 +16,7 @@ local function spawn()
         sprite = sprite,
         width = sprite:getWidth(),
         height = sprite:getHeight(),
+        removable = false,
     }
     setmetatable(b, { __index = bullet })
     return b

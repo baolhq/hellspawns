@@ -7,21 +7,17 @@ local player       = require("src.models.player")
 local bullet       = require("src.models.bullet")
 local enemy        = require("src.models.enemy")
 
-local mainScene    = {
-    assets = {},
-    actions = {},
-    configs = {},
-    bullets = {},
-    enemies = {},
-    enemyMax = 10,
-    enemyTimer = 0,
-    enemyThreshold = 2,
-}
+local mainScene    = {}
 
 function mainScene:load(assets, actions, configs)
     self.assets = assets
     self.actions = actions
     self.configs = configs
+    self.bullets = {}
+    self.enemies = {}
+    self.enemyMax = 10
+    self.enemyTimer = 0
+    self.enemyThreshold = 2
 
     -- Initialize the player
     local pS = love.graphics.newImage(res.PLAYER_SPR)

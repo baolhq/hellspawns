@@ -4,12 +4,7 @@ local consts       = require("src.consts.consts")
 local res          = require("src.consts.res")
 local drawer       = require("src.utils.drawer")
 
-local titleScene   = {
-    assets = {},
-    actions = {},
-    configs = {},
-}
-
+local titleScene   = {}
 local focusedIndex = 1
 local buttonOrder  = { "start", "settings" }
 local buttons      = {
@@ -43,22 +38,39 @@ function titleScene:load(assets, actions, configs)
     buttons.settings.y = buttons.start.y + spacingY
 end
 
+-- Update active button only when the mouse moved
+function titleScene:mousemoved(x, y, dx, dy, isTouch)
+    local mx, my = love.mouse.getPosition()
+
+    for i, name in ipairs(buttonOrder) do
+        local btn = buttons[name]
+        local isHovered =
+            mx > btn.x and mx < btn.x + btn.width and
+            my > btn.y and my < btn.y + btn.height
+
+        btn.active = isHovered
+        if isHovered then
+            focusedIndex = i
+        end
+    end
+end
+
 function titleScene:mousepressed(x, y, btn)
     self.assets.clickSound:play()
     for _, b in pairs(buttons) do
         b.focused = false
     end
 
-    if btn == 1 and buttons.start.hovered then
+    if btn == 1 and buttons.start.active then
         buttons.start.active = true
         self.actions.switchScene("main")
-    elseif btn == 1 and buttons.settings.hovered then
+    elseif btn == 1 and buttons.settings.active then
         buttons.settings.active = true
         self.actions.switchScene("settings")
     end
 end
 
-function titleScene:handleInputs()
+function titleScene:update(dt)
     if inputManager:wasPressed("back") then
         self.actions.quit()
     end
@@ -71,29 +83,17 @@ function titleScene:handleInputs()
         end
     end
 
+    -- Update active button based on keyboard navigations
     if inputManager:wasPressed("tab") or
         inputManager:wasPressed("down")
     then
         for _, b in pairs(buttons) do b.active = false end
         focusedIndex = (focusedIndex - 2) % #buttonOrder + 1
+        buttons[buttonOrder[focusedIndex]].active = true
     elseif inputManager:wasPressed("up") then
         for _, b in pairs(buttons) do b.active = false end
         focusedIndex = focusedIndex % #buttonOrder + 1
-    end
-    buttons[buttonOrder[focusedIndex]].active = true
-end
-
-function titleScene:update(dt)
-    self:handleInputs()
-
-    local mx, my = love.mouse.getPosition()
-    for _, btn in pairs(buttons) do
-        if mx > btn.x and mx < btn.x + btn.width and
-            my > btn.y and my < btn.y + btn.height
-        then
-            for _, b in pairs(buttons) do b.active = false end
-            btn.active = true
-        end
+        buttons[buttonOrder[focusedIndex]].active = true
     end
 end
 
