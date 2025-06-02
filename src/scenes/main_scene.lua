@@ -1,14 +1,13 @@
-local vector    = require("lib.vector")
-local colors    = require("src.consts.colors")
-local keys      = require("src.consts.keys")
-local res       = require("src.consts.res")
-local array     = require("src.utils.array")
+local inputManager = require("src.managers.input_manager")
+local vector       = require("lib.vector")
+local colors       = require("src.consts.colors")
+local res          = require("src.consts.res")
 
-local player    = require("src.models.player")
-local bullet    = require("src.models.bullet")
-local enemy     = require("src.models.enemy")
+local player       = require("src.models.player")
+local bullet       = require("src.models.bullet")
+local enemy        = require("src.models.enemy")
 
-local mainScene = {
+local mainScene    = {
     assets = {},
     actions = {},
     configs = {},
@@ -31,12 +30,6 @@ function mainScene:load(assets, actions, configs)
     player:init(vector(pX, pY), pS)
 end
 
-function mainScene:keypressed(key)
-    if array.contains(keys.BACK, key) then
-        self.actions.switchScene("title")
-    end
-end
-
 function mainScene:mousepressed(x, y, btn)
     if btn == 1 then
         local b = bullet.get()
@@ -49,26 +42,22 @@ function mainScene:mousepressed(x, y, btn)
     end
 end
 
-local function handleMovement(dt)
+function mainScene:handleInputs(dt)
+    if inputManager:wasPressed("back") then
+        self.actions.switchScene("title")
+    end
+
     -- Player movements
     local dir = vector(0, 0)
-    for _, k in pairs(keys.LEFT) do
-        if love.keyboard.isDown(k) then dir.x = dir.x - 1 end
-    end
-    for _, k in pairs(keys.RIGHT) do
-        if love.keyboard.isDown(k) then dir.x = dir.x + 1 end
-    end
-    for _, k in pairs(keys.UP) do
-        if love.keyboard.isDown(k) then dir.y = dir.y - 1 end
-    end
-    for _, k in pairs(keys.DOWN) do
-        if love.keyboard.isDown(k) then dir.y = dir.y + 1 end
-    end
+    if inputManager:isDown("left") then dir.x = dir.x - 1 end
+    if inputManager:isDown("right") then dir.x = dir.x + 1 end
+    if inputManager:isDown("up") then dir.y = dir.y - 1 end
+    if inputManager:isDown("down") then dir.y = dir.y + 1 end
     player:move(dir, dt)
 end
 
 function mainScene:update(dt)
-    handleMovement(dt)
+    self:handleInputs(dt)
 
     -- Update player states
     player:update(dt)
@@ -79,7 +68,7 @@ function mainScene:update(dt)
         if b.removable then table.remove(self.bullets, i) end
     end
 
-    -- Update enemies
+    -- Spawn new enemy wave
     self.enemyTimer = self.enemyTimer + dt
     if self.enemyTimer >= self.enemyThreshold and #self.enemies == 0 then
         for i = 1, self.enemyMax do
@@ -88,13 +77,7 @@ function mainScene:update(dt)
         self.enemyTimer = 0
     end
 
-    for i, e in ipairs(self.enemies) do
-        local dir = vector(player.pos.x, player.pos.y) - e.pos
-        e.dir = dir:normalized()
-        e:update(dt, self.enemies)
-        if e.removable then table.remove(self.enemies, i) end
-    end
-
+    -- Move and destroy dead enemies
     for i = #self.enemies, 1, -1 do
         local e = self.enemies[i]
         local dir = vector(player.pos.x, player.pos.y) - e.pos

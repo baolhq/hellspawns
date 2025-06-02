@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.0.3
+
+Some minor refactoring, add global input manager for sanity
+
+- Add input manager
+- Change button state from `focused` and `hovered` to a unified `active`
+- Update button styles
+
 ## 0.0.2
 
 A basic working prototype of the game

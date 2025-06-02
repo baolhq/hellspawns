@@ -1,5 +1,5 @@
 local sceneManager = {
-    assets = {},
+    assets  = {},
     configs = {},
     current = "title",
 }
@@ -29,12 +29,6 @@ function sceneManager:switch(name, assets, configs)
         }
         self.current = name
         scenes[name]:load(assets, actions, configs)
-    end
-end
-
-function sceneManager:keypressed(key)
-    if scenes[self.current].keypressed then
-        scenes[self.current]:keypressed(key)
     end
 end
 

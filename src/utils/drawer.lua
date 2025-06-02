@@ -17,19 +17,13 @@ function drawer:drawCenteredText(text, font, xOffset, yOffset)
 end
 
 function drawer:drawButton(btn, font)
-    -- Hover effect
-    if btn.hovered then
-        love.graphics.setColor(colors.SLATE_400)
-    else
-        love.graphics.setColor(colors.SLATE_200)
-    end
-
-    -- Button rectangle
+    -- Draw background
+    love.graphics.setColor(colors.SLATE_200)
     love.graphics.rectangle("fill", btn.x, btn.y, btn.width, btn.height, 4, 4)
 
-    -- Button outline on focused
-    if btn.focused then
-        love.graphics.setColor(colors.SLATE_400)
+    -- Active button effect
+    if btn.active then
+        love.graphics.setColor(colors.SLATE_800)
         love.graphics.setLineWidth(2)
         love.graphics.rectangle("line", btn.x, btn.y, btn.width, btn.height, 4, 4)
     end

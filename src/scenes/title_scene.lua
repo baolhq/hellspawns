@@ -1,25 +1,25 @@
-local colors = require("src.consts.colors")
-local consts = require("src.consts.consts")
-local res = require("src.consts.res")
-local drawer = require("src.utils.drawer")
+local inputManager = require("src.managers.input_manager")
+local colors       = require("src.consts.colors")
+local consts       = require("src.consts.consts")
+local res          = require("src.consts.res")
+local drawer       = require("src.utils.drawer")
 
-local titleScene = {
+local titleScene   = {
     assets = {},
     actions = {},
     configs = {},
 }
 
 local focusedIndex = 1
-local buttonOrder = { "start", "settings" }
-local buttons = {
+local buttonOrder  = { "start", "settings" }
+local buttons      = {
     start = {
         x = 0,
         y = 0,
         width = 200,
         height = 40,
         text = "START",
-        focused = true,
-        hovered = false,
+        active = true,
     },
     settings = {
         x = 0,
@@ -27,8 +27,7 @@ local buttons = {
         width = 200,
         height = 40,
         text = "SETTINGS",
-        focused = false,
-        hovered = false,
+        active = false,
     }
 }
 
@@ -44,10 +43,6 @@ function titleScene:load(assets, actions, configs)
     buttons.settings.y = buttons.start.y + spacingY
 end
 
-function titleScene:keypressed(key)
-    if key == "escape" then self.actions.quit() end
-end
-
 function titleScene:mousepressed(x, y, btn)
     self.assets.clickSound:play()
     for _, b in pairs(buttons) do
@@ -55,22 +50,50 @@ function titleScene:mousepressed(x, y, btn)
     end
 
     if btn == 1 and buttons.start.hovered then
-        buttons.start.focused = true
+        buttons.start.active = true
         self.actions.switchScene("main")
     elseif btn == 1 and buttons.settings.hovered then
-        buttons.settings.focused = true
+        buttons.settings.active = true
         self.actions.switchScene("settings")
     end
 end
 
-function titleScene:update(dt)
-    local mx, my = love.mouse.getPosition()
+function titleScene:handleInputs()
+    if inputManager:wasPressed("back") then
+        self.actions.quit()
+    end
 
-    for _, name in ipairs(buttonOrder) do
-        local btn = buttons[name]
-        btn.hovered =
-            mx > btn.x and mx < btn.x + btn.width and
+    if inputManager:wasPressed("accept") then
+        if buttons.start.active then
+            self.actions.switchScene("main")
+        else
+            self.actions.switchScene("settings")
+        end
+    end
+
+    if inputManager:wasPressed("tab") or
+        inputManager:wasPressed("down")
+    then
+        for _, b in pairs(buttons) do b.active = false end
+        focusedIndex = (focusedIndex - 2) % #buttonOrder + 1
+    elseif inputManager:wasPressed("up") then
+        for _, b in pairs(buttons) do b.active = false end
+        focusedIndex = focusedIndex % #buttonOrder + 1
+    end
+    buttons[buttonOrder[focusedIndex]].active = true
+end
+
+function titleScene:update(dt)
+    self:handleInputs()
+
+    local mx, my = love.mouse.getPosition()
+    for _, btn in pairs(buttons) do
+        if mx > btn.x and mx < btn.x + btn.width and
             my > btn.y and my < btn.y + btn.height
+        then
+            for _, b in pairs(buttons) do b.active = false end
+            btn.active = true
+        end
     end
 end
 
