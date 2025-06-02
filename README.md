@@ -4,10 +4,11 @@ A top-down shooter inspired by Vampire Surviors that I'm doing to learn object p
 
 ## Player Manual
 
-1. Move your paddle with `Arrow keys` or `WASD`
-2. Go back or exit with <code>Esc</code>
-3. Pause and resume with <code>Space</code>
-4. Restart the game with <code>Enter</code>
+1. Move your character with `Arrow Keys` or `WASD`
+2. Shoot enemies with `Left Mouse Button`
+3. Go back or exit with <code>Esc</code>
+4. Pause and resume with <code>Space</code>
+5. Restart the game with <code>Enter</code>
 
 ## Building
 
