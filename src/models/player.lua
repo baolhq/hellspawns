@@ -8,6 +8,8 @@ local player = {
     pos = {},
     sprite = {},
     bullets = {},
+    width = 0,
+    height = 0,
 }
 
 function player:init(pos, sprite)
@@ -17,6 +19,8 @@ function player:init(pos, sprite)
     self.pos = pos
     self.velocity = vector(0, 0)
     self.sprite = sprite
+    self.width = sprite:getWidth()
+    self.height = sprite:getHeight()
 end
 
 function player:move(dir, dt)

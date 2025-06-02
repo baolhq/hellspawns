@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.0.2
+
+A basic working prototype of the game
+
+- Add bullet and enemy logics
+- Implement enemy object pooling and movements
+- Add simple enemy wave logic
+- Add basic AABB collision detection
+- **Add enemy repulsive force to prevent overlap with each other**
+
 ## 0.0.1
 
 Not so much going on, just bringin' some stuff from my old project over.
