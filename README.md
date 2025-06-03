@@ -8,7 +8,6 @@ A top-down shooter inspired by Vampire Surviors that I'm doing to learn object p
 2. Shoot enemies with `Left Mouse Button`
 3. Go back or exit with <code>Esc</code>
 4. Pause and resume with <code>Space</code>
-5. Restart the game with <code>Enter</code>
 
 ## Building
 

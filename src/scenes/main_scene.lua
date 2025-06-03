@@ -1,14 +1,13 @@
-local inputManager = require("src.managers.input_manager")
-local tileManager  = require("src.managers.tile_manager")
-local vector       = require("lib.vector")
-local colors       = require("src.consts.colors")
-local res          = require("src.consts.res")
+local tileManager = require("src.managers.tile_manager")
+local vector      = require("lib.vector")
+local colors      = require("src.consts.colors")
+local input       = require("src.utils.input")
 
-local player       = require("src.models.player")
-local bullet       = require("src.models.bullet")
-local enemy        = require("src.models.enemy")
+local player      = require("src.models.player")
+local bullet      = require("src.models.bullet")
+local enemy       = require("src.models.enemy")
 
-local mainScene    = {}
+local mainScene   = {}
 
 function mainScene:load(assets, actions, configs)
     self.assets = assets
@@ -19,6 +18,7 @@ function mainScene:load(assets, actions, configs)
     self.enemyMax = 10
     self.enemyTimer = 0
     self.enemyThreshold = 2
+    self.isGameOver = false
     tileManager:init()
 
     -- Initialize the player
@@ -40,24 +40,42 @@ function mainScene:mousepressed(x, y, btn)
 end
 
 function mainScene:handleInputs(dt)
-    if inputManager:wasPressed("back") then
+    if input:wasPressed("back") then
         self.actions.switchScene("title")
     end
 
     -- Player movements
-    local dir = vector(0, 0)
-    if inputManager:isDown("left") then dir.x = dir.x - 1 end
-    if inputManager:isDown("right") then dir.x = dir.x + 1 end
-    if inputManager:isDown("up") then dir.y = dir.y - 1 end
-    if inputManager:isDown("down") then dir.y = dir.y + 1 end
-    player:move(dir, dt)
+    if not self.isGameOver then
+        local dir = vector(0, 0)
+        if input:isDown("left") then dir.x = dir.x - 1 end
+        if input:isDown("right") then dir.x = dir.x + 1 end
+        if input:isDown("up") then dir.y = dir.y - 1 end
+        if input:isDown("down") then dir.y = dir.y + 1 end
+        player:move(dir, dt)
+    end
+end
+
+function mainScene:unload()
+    for _, b in pairs(self.bullets) do
+        b.removable = true
+    end
+
+    for _, e in pairs(self.enemies) do
+        e.removable = true
+    end
+end
+
+function mainScene:gameOver()
+    self.isGameOver = true
+    self:unload()
 end
 
 function mainScene:update(dt)
     self:handleInputs(dt)
 
     -- Update player states
-    player:update(dt)
+    if not self.isGameOver then player:update(self.enemies, dt) end
+    if player.hp <= 0 then self:gameOver() end
 
     -- Update bullet positions
     for i, b in ipairs(self.bullets) do
@@ -96,6 +114,8 @@ function mainScene:draw()
     love.graphics.clear(colors.SLATE_100)
 
     player:draw()
+    if not self.isGameOver then player:drawHeath() end
+
     for _, b in pairs(self.bullets) do b:draw() end
     for _, e in pairs(self.enemies) do e:draw() end
 end

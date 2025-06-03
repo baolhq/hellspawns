@@ -1,7 +1,7 @@
+local sceneManager = require("src.managers.scene_manager")
 local consts = require("src.consts.consts")
 local res = require("src.consts.res")
-local inputManager = require("src.managers.input_manager")
-local sceneManager = require("src.managers.scene_manager")
+local input = require("src.utils.input")
 
 --#region Debugger setup
 
@@ -43,11 +43,11 @@ function love.load()
 end
 
 function love.keypressed(key)
-    inputManager:keypressed(key)
+    input:keypressed(key)
 end
 
 function love.keyreleased(key)
-    inputManager:keyreleased(key)
+    input:keyreleased(key)
 end
 
 function love:mousemoved(x, y, dx, dy, isTouch)
@@ -60,7 +60,7 @@ end
 
 function love.update(dt)
     sceneManager:update(dt)
-    inputManager:update()
+    input:update()
 end
 
 function love.draw()

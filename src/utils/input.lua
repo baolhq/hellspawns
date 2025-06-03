@@ -1,4 +1,4 @@
-local inputManager = {
+local input = {
     -- Action to keys mappings
     bindings = {
         up     = { "up", "w" },
@@ -14,13 +14,13 @@ local inputManager = {
     keysPressed = {}, -- Keep track of which keys are pressed this frame
 }
 
-function inputManager:keypressed(key)
+function input:keypressed(key)
     self.keysDown[key] = true
     self.keysPressed[key] = true
 end
 
 -- Check if an input action is currently held down
-function inputManager:isDown(action)
+function input:isDown(action)
     local keys = self.bindings[action]
     if not keys then return false end
 
@@ -33,7 +33,7 @@ function inputManager:isDown(action)
 end
 
 -- Check if an input action was just pressed this frame
-function inputManager:wasPressed(action)
+function input:wasPressed(action)
     local keys = self.bindings[action]
     if not keys then return false end
 
@@ -45,13 +45,13 @@ function inputManager:wasPressed(action)
     return false
 end
 
-function inputManager:keyreleased(key)
+function input:keyreleased(key)
     self.keysDown[key] = false
 end
 
-function inputManager:update()
+function input:update()
     -- Reset key pressed at the end of each frame
     self.keysPressed = {}
 end
 
-return inputManager
+return input

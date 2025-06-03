@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.0
+
+Major refactoring, add i-frames logics
+
+- Add i-frames when the player touches an enemy
+- Move `managers.input_manager` to just `utils.input`
+
 ## 0.0.4
 
 Refactoring models for simplicity, keyboard and mouse UI navigations

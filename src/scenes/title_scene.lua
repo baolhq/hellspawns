@@ -1,8 +1,8 @@
-local inputManager = require("src.managers.input_manager")
 local colors       = require("src.consts.colors")
 local consts       = require("src.consts.consts")
 local res          = require("src.consts.res")
 local drawer       = require("src.utils.drawer")
+local input        = require("src.utils.input")
 
 local titleScene   = {}
 local focusedIndex = 1
@@ -71,11 +71,9 @@ function titleScene:mousepressed(x, y, btn)
 end
 
 function titleScene:update(dt)
-    if inputManager:wasPressed("back") then
-        self.actions.quit()
-    end
+    if input:wasPressed("back") then self.actions.quit() end
 
-    if inputManager:wasPressed("accept") then
+    if input:wasPressed("accept") then
         if buttons.start.active then
             self.actions.switchScene("main")
         else
@@ -84,13 +82,11 @@ function titleScene:update(dt)
     end
 
     -- Update active button based on keyboard navigations
-    if inputManager:wasPressed("tab") or
-        inputManager:wasPressed("down")
-    then
+    if input:wasPressed("tab") or input:wasPressed("down") then
         for _, b in pairs(buttons) do b.active = false end
         focusedIndex = (focusedIndex - 2) % #buttonOrder + 1
         buttons[buttonOrder[focusedIndex]].active = true
-    elseif inputManager:wasPressed("up") then
+    elseif input:wasPressed("up") then
         for _, b in pairs(buttons) do b.active = false end
         focusedIndex = focusedIndex % #buttonOrder + 1
         buttons[buttonOrder[focusedIndex]].active = true

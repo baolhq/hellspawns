@@ -1,4 +1,4 @@
-local inputManager  = require("src.managers.input_manager")
+local input         = require("src.utils.input")
 local colors        = require("src.consts.colors")
 
 local settingsScene = {}
@@ -10,7 +10,7 @@ function settingsScene:load(assets, actions, configs)
 end
 
 function settingsScene:handleInputs()
-    if inputManager:wasPressed("back") then
+    if input:wasPressed("back") then
         self.actions.switchScene("title")
     end
 end
