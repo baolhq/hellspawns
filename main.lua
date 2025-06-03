@@ -28,18 +28,29 @@ local assets = {}
 local configs = {}
 
 function love.load()
+    love.graphics.setDefaultFilter("nearest", "nearest")
+    -- Set game title and icon
     local gameIcon = love.image.newImageData(res.GAME_ICON)
     love.window.setIcon(gameIcon)
     love.window.setTitle(consts.GAME_TITLE)
-    love.graphics.setDefaultFilter("nearest", "nearest")
 
-    assets.bgSound = love.audio.newSource(res.BG_SOUND, "stream")
+    -- === Load sounds ===
+    assets.titleSound = love.audio.newSource(res.EDIT_SOUND, "stream")
+    assets.titleSound:setLooping(true)
+    assets.titleSound:setVolume(0.5)
+
+    assets.bgSound = love.audio.newSource(res.MAIN_SOUND, "stream")
     assets.bgSound:setLooping(true)
-    assets.blipSound = love.audio.newSource(res.BLIP_SOUND, "static")
-    assets.blipSound:setVolume(0.5)
+    assets.bgSound:setVolume(0.5)
+
     assets.clickSound = love.audio.newSource(res.CLICK_SOUND, "static")
     assets.clickSound:setVolume(0.5)
 
+    assets.shootSound = love.audio.newSource(res.SHOOT_SOUND, "static")
+    assets.bulletHitSound = love.audio.newSource(res.BULLET_HIT_SOUND, "static")
+    assets.playerHitSound = love.audio.newSource(res.PLAYER_HIT_SOUND, "static")
+
+    -- Load configs and start game
     configs = file.loadConfigs()
     sceneManager:load(assets, configs)
 end

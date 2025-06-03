@@ -7,6 +7,7 @@ function tileManager:init()
     self.player = love.graphics.newQuad(32, 0, 8, 8, self.tilemap)
     self.chaser = love.graphics.newQuad(56, 0, 8, 8, self.tilemap)
     self.wanderer = love.graphics.newQuad(72, 0, 8, 8, self.tilemap)
+    self.gun = love.graphics.newImage(res.GUN_SPR)
 end
 
 return tileManager

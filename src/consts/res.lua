@@ -1,12 +1,23 @@
 local res = {
+    -- Images
     GAME_ICON = "res/img/icon.png",
-    BG_SOUND = "res/audio/background.ogg",
-    BLIP_SOUND = "res/audio/blip.wav",
-    CLICK_SOUND = "res/audio/click.wav",
-    MAIN_FONT = "res/fonts/Valorant.ttf",
-    CONFIG_PATH = "hellspawns.conf",
-    BULLET_SPR = "res/img/bullet.png",
     TILEMAP = "res/img/tilemap.png",
+    BULLET_SPR = "res/img/bullet.png",
+    GUN_SPR = "res/img/gun.png",
+
+    -- Sounds
+    EDIT_SOUND = "res/audio/edit_theme.mp3",
+    MAIN_SOUND = "res/audio/main_theme.mp3",
+    BULLET_HIT_SOUND = "res/audio/blip.mp3",
+    PLAYER_HIT_SOUND = "res/audio/blurp.mp3",
+    SHOOT_SOUND = "res/audio/shoot.mp3",
+    CLICK_SOUND = "res/audio/click.wav",
+
+    -- Fonts
+    MAIN_FONT = "res/fonts/Valorant.ttf",
+
+    -- File paths
+    CONFIG_PATH = "hellspawns.conf",
 }
 
 return res

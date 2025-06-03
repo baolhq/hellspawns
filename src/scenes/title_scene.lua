@@ -37,6 +37,8 @@ function titleScene:load(assets, actions, configs)
     buttons.start.y = (love.graphics.getHeight() - buttons.start.height) / 2 + 28
     buttons.settings.x = buttons.start.x
     buttons.settings.y = buttons.start.y + spacingY
+
+    self.assets.titleSound:play()
 end
 
 -- Update active button only when the mouse moved
@@ -64,6 +66,7 @@ function titleScene:mousepressed(x, y, btn)
 
     if btn == 1 and buttons.start.active then
         buttons.start.active = true
+        self.assets.titleSound:stop()
         self.actions.switchScene("main")
     elseif btn == 1 and buttons.settings.active then
         buttons.settings.active = true
@@ -76,6 +79,7 @@ function titleScene:update(dt)
 
     if input:wasPressed("accept") then
         if buttons.start.active then
+            self.assets.titleSound:stop()
             self.actions.switchScene("main")
         else
             self.actions.switchScene("settings")

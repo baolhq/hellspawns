@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.1
+
+Add more resources to the game
+
+- Add gun sprite and implement gun rotations
+- Add many sound effects
+- Remove unused sounds
+
 ## 0.1.0
 
 Major refactoring, implement i-frames logics

@@ -31,25 +31,29 @@ function mainScene:load(assets, actions, configs)
 
     tileManager:init()
     player:init()
+
+    self.assets.bgSound:play()
 end
 
 function mainScene:mousepressed(x, y, btn)
     if btn == 1 then
         local b = bullet.get()
-        local bx = player.pos.x + player.width / 2
-        local by = player.pos.y + player.height / 2
-
-        b.pos = vector(bx, by)
-        -- Set bullet direction to the cursor
-        local dir = vector(x, y) - b.pos
-        b.dir = dir:normalized()
+        b.pos = player.gunTip:clone() -- Shoot from gun tip
+        b.dir = (vector(x, y) - b.pos):normalized()
         table.insert(self.bullets, b)
+
+        -- Play random pitch from 0.5 to 1.5
+        local pitch = love.math.random() + 0.5
+        self.assets.shootSound:setPitch(pitch)
+        self.assets.shootSound:play()
     end
 end
 
 function mainScene:handleInputs(dt)
     if input:wasPressed("back") then
+        self.assets.bgSound:stop()
         self.actions.switchScene("title")
+        self:unload()
     end
 
     if input:wasPressed("space") then
@@ -87,12 +91,14 @@ function mainScene:update(dt)
     if self.isPaused then return end
 
     -- Update player states
-    if not self.isGameOver then player:update(self.enemies, dt) end
     if player.hp <= 0 then self:gameOver() end
+    if not self.isGameOver then
+        player:update(self.enemies, self.assets.playerHitSound, dt)
+    end
 
     -- Update bullet positions
     for i, b in ipairs(self.bullets) do
-        b:update(self.enemies, dt)
+        b:update(self.enemies, self.assets.bulletHitSound, dt)
         if b.removable then table.remove(self.bullets, i) end
     end
 

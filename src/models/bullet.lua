@@ -45,7 +45,7 @@ function bullet.get()
 end
 
 -- === Behavior ===
-function bullet:update(enemies, dt)
+function bullet:update(enemies, hitSound, dt)
     self.pos = self.pos + self.dir * self.speed * dt
 
     if self:isOutOfBounds() then
@@ -59,6 +59,7 @@ function bullet:update(enemies, dt)
             e.hp = e.hp - self.dmg
             if e.hp <= 0 then e.removable = true end
             self.removable = true
+            hitSound:play()
             break
         end
     end
