@@ -4,7 +4,7 @@ local res = {
     BLIP_SOUND = "res/audio/blip.wav",
     CLICK_SOUND = "res/audio/click.wav",
     MAIN_FONT = "res/fonts/Valorant.ttf",
-    CONFIG_PATH = "ballout.conf",
+    CONFIG_PATH = "hellspawns.conf",
     BULLET_SPR = "res/img/bullet.png",
     TILEMAP = "res/img/tilemap.png",
 }

@@ -1,6 +1,9 @@
 local tileManager = require("src.managers.tile_manager")
 local vector      = require("lib.vector")
 local colors      = require("src.consts.colors")
+local consts      = require("src.consts.consts")
+local res         = require("src.consts.res")
+local drawer      = require("src.utils.drawer")
 local input       = require("src.utils.input")
 
 local player      = require("src.models.player")
@@ -14,14 +17,19 @@ function mainScene:load(assets, actions, configs)
     self.actions = actions
     self.configs = configs
     self.bullets = {}
+    self.isPaused = false
+    self.isGameOver = false
+
     self.enemies = {}
-    self.enemyMax = 10
+    self.enemyMax = 5
     self.enemyTimer = 0
     self.enemyThreshold = 2
-    self.isGameOver = false
-    tileManager:init()
 
-    -- Initialize the player
+    if self.configs.diff then
+        self.enemyMax = self.enemyMax * self.configs.diff
+    end
+
+    tileManager:init()
     player:init()
 end
 
@@ -44,8 +52,12 @@ function mainScene:handleInputs(dt)
         self.actions.switchScene("title")
     end
 
+    if input:wasPressed("space") then
+        self.isPaused = not self.isPaused
+    end
+
     -- Player movements
-    if not self.isGameOver then
+    if not (self.isPaused or self.isGameOver) then
         local dir = vector(0, 0)
         if input:isDown("left") then dir.x = dir.x - 1 end
         if input:isDown("right") then dir.x = dir.x + 1 end
@@ -72,6 +84,7 @@ end
 
 function mainScene:update(dt)
     self:handleInputs(dt)
+    if self.isPaused then return end
 
     -- Update player states
     if not self.isGameOver then player:update(self.enemies, dt) end
@@ -118,6 +131,20 @@ function mainScene:draw()
 
     for _, b in pairs(self.bullets) do b:draw() end
     for _, e in pairs(self.enemies) do e:draw() end
+
+    -- Game paused message
+    if self.isPaused then
+        drawer.drawOverlay(140, "PAUSED", {
+            { text = "PRESS <SPACE> TO RESUME", y = 28 },
+        })
+    end
+
+    -- Game over message
+    if self.isGameOver then
+        drawer.drawOverlay(140, "GAME OVER", {
+            { text = "PRESS <ENTER> TO RETURN", y = 24 }
+        })
+    end
 end
 
 return mainScene

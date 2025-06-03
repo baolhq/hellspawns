@@ -1,7 +1,8 @@
-local sceneManager = require("src.managers.scene_manager")
-local consts = require("src.consts.consts")
-local res = require("src.consts.res")
-local input = require("src.utils.input")
+local sceneManager      = require("src.managers.scene_manager")
+local consts            = require("src.consts.consts")
+local file              = require("src.utils.file")
+local res               = require("src.consts.res")
+local input             = require("src.utils.input")
 
 --#region Debugger setup
 
@@ -39,6 +40,7 @@ function love.load()
     assets.clickSound = love.audio.newSource(res.CLICK_SOUND, "static")
     assets.clickSound:setVolume(0.5)
 
+    configs = file.loadConfigs()
     sceneManager:load(assets, configs)
 end
 
@@ -50,7 +52,11 @@ function love.keyreleased(key)
     input:keyreleased(key)
 end
 
-function love:mousemoved(x, y, dx, dy, isTouch)
+function love.mousemoved(x, y, dx, dy, isTouch)
+    -- Ignore small movements
+    local min = 2
+    if math.abs(dx) < min and math.abs(dy) < min then return end
+
     sceneManager:mousemoved(x, y, dx, dy, isTouch)
 end
 

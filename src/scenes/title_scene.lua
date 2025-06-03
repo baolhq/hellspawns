@@ -2,6 +2,7 @@ local colors       = require("src.consts.colors")
 local consts       = require("src.consts.consts")
 local res          = require("src.consts.res")
 local drawer       = require("src.utils.drawer")
+local file         = require("src.utils.file")
 local input        = require("src.utils.input")
 
 local titleScene   = {}
@@ -96,12 +97,12 @@ end
 function titleScene:draw()
     love.graphics.clear(colors.SLATE_100)
 
-    local font = drawer:getFont(res.MAIN_FONT, consts.FONT_TITLE_SIZE)
-    drawer:drawCenteredText(consts.GAME_TITLE, font, 0, -68)
+    local font = file:getFont(res.MAIN_FONT, consts.FONT_TITLE_SIZE)
+    drawer.drawCenteredText(consts.GAME_TITLE, font, 0, -68)
 
-    font = drawer:getFont(res.MAIN_FONT, consts.FONT_SUB_SIZE)
-    drawer:drawButton(buttons.start, font)
-    drawer:drawButton(buttons.settings, font)
+    font = file:getFont(res.MAIN_FONT, consts.FONT_SUB_SIZE)
+    drawer.drawButton(buttons.start, font)
+    drawer.drawButton(buttons.settings, font)
 end
 
 return titleScene
