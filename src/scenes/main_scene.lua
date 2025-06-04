@@ -2,7 +2,6 @@ local tileManager = require("src.managers.tile_manager")
 local vector      = require("lib.vector")
 local colors      = require("src.consts.colors")
 local consts      = require("src.consts.consts")
-local res         = require("src.consts.res")
 local drawer      = require("src.utils.drawer")
 local input       = require("src.utils.input")
 
@@ -132,11 +131,25 @@ end
 function mainScene:draw()
     love.graphics.clear(colors.SLATE_100)
 
+    -- Apply screenshake
+    local offsetX, offsetY = 0, 0
+    if player.shakeTime > 0 then
+        offsetX = love.math.random(-consts.SHAKE_MAGNITUDE, consts.SHAKE_MAGNITUDE)
+        offsetY = love.math.random(-consts.SHAKE_MAGNITUDE, consts.SHAKE_MAGNITUDE)
+    end
+
+    -- Save current screen state into the stack
+    love.graphics.push()
+    love.graphics.translate(offsetX, offsetY)
+
     player:draw()
-    if not self.isGameOver then player:drawHeath() end
+    if not self.isGameOver then player:drawHp() end
 
     for _, b in pairs(self.bullets) do b:draw() end
     for _, e in pairs(self.enemies) do e:draw() end
+
+    -- Load previous screen state
+    love.graphics.pop()
 
     -- Game paused message
     if self.isPaused then

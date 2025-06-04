@@ -2,11 +2,13 @@
 
 ## 0.1.1
 
-Add more resources to the game
+Add more resources to the game, more juices!
 
 - Add gun sprite and implement gun rotations
 - Add many sound effects
 - Remove unused sounds
+- Add healthbar, particles for enemies
+- Add screenshakes
 
 ## 0.1.0
 

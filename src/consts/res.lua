@@ -4,6 +4,7 @@ local res = {
     TILEMAP = "res/img/tilemap.png",
     BULLET_SPR = "res/img/bullet.png",
     GUN_SPR = "res/img/gun.png",
+    PARTICLE = "res/img/rectangle.png",
 
     -- Sounds
     EDIT_SOUND = "res/audio/edit_theme.mp3",

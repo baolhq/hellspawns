@@ -57,7 +57,8 @@ function bullet:update(enemies, hitSound, dt)
     for _, e in ipairs(enemies) do
         if collider.aabb(self, e) then
             e.hp = e.hp - self.dmg
-            if e.hp <= 0 then e.removable = true end
+            e.showHp = true
+            if e.hp <= 0 then e:explode() end
             self.removable = true
             hitSound:play()
             break

@@ -1,6 +1,7 @@
 local tileManager     = require("src.managers.tile_manager")
 local vector          = require("lib.vector")
 local colors          = require("src.consts.colors")
+local consts          = require("src.consts.consts")
 local collider        = require("src.utils.collider")
 
 local player          = {}
@@ -22,6 +23,7 @@ function player:init()
     self.height = SPRITE_SIZE
     self.iFrame = false
     self.iFrameTimer = 0
+    self.shakeTime = 0
 
     -- Center player on screen
     local x = (love.graphics.getWidth() - 32) / 2
@@ -33,6 +35,9 @@ end
 function player:update(enemies, hitSound, dt)
     self:updateIFrame(dt)
     self:checkCollisions(enemies, hitSound)
+
+    -- Update screenshake
+    if self.shakeTime > 0 then self.shakeTime = self.shakeTime - dt end
 end
 
 -- Invincible state last for a bit
@@ -52,6 +57,8 @@ function player:checkCollisions(enemies, hitSound)
     for i, e in ipairs(enemies) do
         if not self.iFrame and collider.aabb(self, e) then
             self.hp = self.hp - e.dmg
+            -- Prevent game over screenshake
+            self.shakeTime = self.hp > 0 and consts.SHAKE_DURATION or 0
             self.iFrame = true
             hitSound:play()
             break
@@ -65,6 +72,17 @@ function player:move(dir, dt)
     if dir.x ~= 0 and dir.y ~= 0 then dir = dir:normalized() end
 
     self.pos = self.pos + dir * self.speed * dt
+end
+
+function player:draw()
+    local x, y = math.floor(self.pos.x), math.floor(self.pos.y)
+    love.graphics.setColor(colors.WHITE)
+    love.graphics.draw(
+        tileManager.tilemap, self.sprite, x, y,
+        0, SPRITE_SCALE, SPRITE_SCALE
+    )
+
+    self:drawGun()
 end
 
 function player:drawGun()
@@ -100,18 +118,7 @@ function player:drawGun()
     )
 end
 
-function player:draw()
-    local x, y = math.floor(self.pos.x), math.floor(self.pos.y)
-    love.graphics.setColor(colors.WHITE)
-    love.graphics.draw(
-        tileManager.tilemap, self.sprite, x, y,
-        0, SPRITE_SCALE, SPRITE_SCALE
-    )
-
-    self:drawGun()
-end
-
-function player:drawHeath()
+function player:drawHp()
     if not self.iFrame then return end
 
     local barW, barH = 40, 8
